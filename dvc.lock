@@ -10,3 +10,61 @@ stages:
     - path: data/02_part/raw/SeoulBikeData.csv
       md5: 4ec879231f9c38e97dd87049bdb61c18
       size: 604166
+  prepare:
+    cmd: python src/prepare_data.py
+    deps:
+    - path: data/02_part/raw/SeoulBikeData.csv
+      md5: 4ec879231f9c38e97dd87049bdb61c18
+      size: 604166
+    - path: src/prepare_data.py
+      md5: f60975674d476405e7a7688af8f3c5ee
+      size: 1963
+    outs:
+    - path: data/02_part/interim/clean_data.parquet
+      md5: 3dddc87ffaa450b942ed8159c8f9331c
+      size: 166815
+  split_data:
+    cmd: python src/split_data.py
+    deps:
+    - path: data/02_part/interim/clean_data.parquet
+      md5: 3dddc87ffaa450b942ed8159c8f9331c
+      size: 166815
+    - path: src/split_data.py
+      md5: 0a54fa87ae54693ebc07596d093eb618
+      size: 991
+    outs:
+    - path: data/02_part/processed/test.parquet
+      md5: 3e9f4c1925b9248d417d2432ed46ce9c
+      size: 54939
+    - path: data/02_part/processed/train.parquet
+      md5: 6e58cbdee6b53a161a1485742eaab735
+      size: 91334
+  train:
+    cmd: python src/train_model.py
+    deps:
+    - path: data/02_part/processed/train.parquet
+      md5: 6e58cbdee6b53a161a1485742eaab735
+      size: 91334
+    - path: src/train_model.py
+      md5: 0a63b25db6147a0e4c6273be89c3d691
+      size: 1176
+    outs:
+    - path: models/rf_model.pkl
+      md5: 4962aa507e598fe6b343ad4ba00a011a
+      size: 98364088
+  evaluate:
+    cmd: python src/evaluate_model.py
+    deps:
+    - path: data/02_part/processed/test.parquet
+      md5: 3e9f4c1925b9248d417d2432ed46ce9c
+      size: 54939
+    - path: models/rf_model.pkl
+      md5: 4962aa507e598fe6b343ad4ba00a011a
+      size: 98364088
+    - path: src/evaluate_model.py
+      md5: ee1c63f3f96464bbf064021b50e19514
+      size: 1493
+    outs:
+    - path: reports/metrics.json
+      md5: 9db46f02890504e3d7b380fc8b3366a9
+      size: 93
