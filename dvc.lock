@@ -1,0 +1,12 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python src/get_data.py
+    deps:
+    - path: src/get_data.py
+      md5: ae306d4f02401a484bbbd796cd5f2ffb
+      size: 515
+    outs:
+    - path: data/02_part/raw/SeoulBikeData.csv
+      md5: 4ec879231f9c38e97dd87049bdb61c18
+      size: 604166
